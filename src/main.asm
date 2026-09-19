@@ -1,0 +1,11 @@
+incsrc "defines.asm"
+
+incsrc "edits.asm"
+incsrc "hijacks.asm"
+
+%org($0F, $E34C)
+incsrc "nmi.asm"
+incsrc "every_frame.asm"
+
+warnsite $E516
+

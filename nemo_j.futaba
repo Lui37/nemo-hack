@@ -1,0 +1,14 @@
+[FUTABA:assemble]
+
+assembly:
+	entry              = src/main.asm
+	type               = patch
+	output             = target/nemo_j_hack.nes
+	base               = nes/nemo_j.nes
+
+header:
+	mapmode            = none
+	autofill           = false
+
+debug:
+	tokens             = off
