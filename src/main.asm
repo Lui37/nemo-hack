@@ -6,6 +6,9 @@ incsrc "hijacks.asm"
 %org($0F, $E34C)
 incsrc "nmi.asm"
 incsrc "every_frame.asm"
+incsrc "level.asm"
+
+print site
 
 warnsite $E516
 

@@ -1,7 +1,6 @@
 macro org(bank, offset)
     org $10 + ({offset}&$1FFF) + ($2000*{bank})
     site {offset}
-	print pc
 endmacro
 
 macro hex2dec(register)
@@ -24,6 +23,21 @@ allocate $F0
 	
 endallocate
 
+allocate $06B0
+	level_timer_frames :: 1
+	level_timer_seconds :: 1
+	level_timer_minutes :: 1
+	draw_timer :: 1
+	reset_timer :: 1
+endallocate
+
+; constants
+TIMER_LOCATION			= $2B23
 
 ; ram
 nmi_flag				= $12
+vram_buffer_index		= $77
+vram_buffer				= $0300
+player_pose				= $05C0
+input_rlduteba_hold		= $0690
+input_rlduteba_frame	= $0692

@@ -2,4 +2,4 @@
 Pajama Hero: Nemo romhack for speedrun practice
 
 **Features**
-Work in progress
+- Work in progress
