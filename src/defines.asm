@@ -38,7 +38,7 @@ TIMER_LOCATION			= $2B23
 BOSS_HP_LOCATION		= $2B35
 
 ; ram
-nmi_flag				= $12
+nmi_flag				= $13
 vram_buffer_index		= $77
 current_keys			= $8B
 current_lives			= $8D

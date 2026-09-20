@@ -2,8 +2,8 @@
 level_init:
 		lda reset_timer
 		beq +
-		lda counter_60hz
-		sta previous_60hz
+		ldy counter_60hz
+		sty previous_60hz
 		lda #0
 		sta level_timer_frames
 		sta level_timer_seconds
@@ -11,7 +11,8 @@ level_init:
 		sta real_frames_elapsed
 		sta dropped_frames
 		sta reset_timer
-	+	jmp handle_timer_drawing
+	+	inc draw_timer
+		rts 
 
 
 level_tick:

@@ -12,7 +12,7 @@ every_frame:
 		bcc +
 		lda #$FF
 	+	sta dropped_frames
-		
+	
 		lda counter_60hz
 		sta previous_60hz
 		
