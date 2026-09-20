@@ -23,12 +23,21 @@ subroutine_E4B6:
 %org($0E, $CB24)
 		bvs &
 		
+; title screen stuff
+%org($0E, $C9AF)
+		lda #$BF
+%org($0E, $C9C3)
+		lda #$BF
+		
+; skip "continue" cover up
+%org($0E, $C9D7)
+		lda #0
+		sta current_level
+		jmp title_screen
+		
 ; always enable level select and show the level number on screen
 %org($0E, $CA00)
 title_screen:
-		lda #$BF				; enable and print "dream select"
-		sta $02F8
-		sta $02FC
 		ldx vram_buffer_index
 		ldy #$00
 	-	lda dream_select_text,y
@@ -57,8 +66,10 @@ title_screen:
 		
 		ldy current_level
 		cpy #$09				; allow selecting 8-2 and 8-3
-		beq .loop
-		iny
+		bcc +					; and allow cycling back to 0
+		ldy #$FF
+		clc
+	+	iny
 		sty current_level
 		
 		ldx vram_buffer_index
