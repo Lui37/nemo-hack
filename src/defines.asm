@@ -35,6 +35,7 @@ endallocate
 
 ; constants
 TIMER_LOCATION			= $2B23
+BOSS_HP_LOCATION		= $2B35
 
 ; ram
 nmi_flag				= $12

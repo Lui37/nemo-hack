@@ -21,6 +21,13 @@ level_tick:
 		beq +
 		jsr handle_timer_drawing
 	+
+	
+		lda $96
+		cmp #7
+		bcc +
+		jsr handle_boss_hp_drawing
+	+
+	
 		jmp $D0AE
 		
 update_timer:
@@ -62,9 +69,8 @@ update_timer:
 		lda #0
 		sta real_frames_elapsed
 		rts
-		
-		
-	
+
+
 handle_timer_drawing:
 		ldx vram_buffer_index
 		lda #7
@@ -117,6 +123,57 @@ draw_dec_value:
 		sta vram_buffer,x
 		inx
 		rts
+
+
+handle_boss_hp_drawing:
+		ldy #2
+		lda $0490,y
+		cmp #$3F		; penguin
+		beq .boss
+		cmp #$42		; stingray
+		beq .boss
+		cmp #$53		; boss defeated
+		beq .win
+		iny				; use Y=3 for final boss
+		cmp #$54		; nightmare king defeated
+		beq .win
+		cmp #$44		; nightmare king (0493 = 45)
+		bne .done
+	.boss
+		lda $05D0,y		; hp
+		tay
+	.draw_hp
+		ldx vram_buffer_index
+		lda #4
+		sta vram_buffer,x
+		inx
+		lda #>BOSS_HP_LOCATION
+		sta vram_buffer,x
+		inx
+		lda #<BOSS_HP_LOCATION
+		sta vram_buffer,x
+		inx
+		lda #"B"
+		sta vram_buffer,x
+		inx
+		lda #"="
+		sta vram_buffer,x
+		inx
+		tya
+		jsr draw_dec_value
+		stx vram_buffer_index
+	.done
+		rts
+		
+	.win
+		lda $0620,y		; only draw the timer once
+		cmp #$3C
+		bne +
+		inc draw_timer
+	+
+		ldy #0			; force HP to 0
+		beq .draw_hp
+		
 		
 		
 item_interaction:
