@@ -9,7 +9,7 @@ incsrc "every_frame.asm"
 incsrc "level.asm"
 
 print site
-warnsite $E516
+warnsite $E510
 
 ; title screen digits
 org $020310

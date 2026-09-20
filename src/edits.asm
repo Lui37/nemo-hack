@@ -4,6 +4,21 @@
 		nop
 		nop
 		
+; relocate some subroutine that is used by cutscenes
+%org($0F, $E510)
+subroutine_E4B6:
+		inc $7F
+		bne +
+		inc $80
+	+	rts
+%org($0F, $E2B6)
+		jsr subroutine_E4B6
+		jsr subroutine_E4B6
+%org($0F, $E2EE)
+		jsr subroutine_E4B6
+%org($0F, $E2F6)
+		jsr subroutine_E4B6
+		
 ; infinite lives
 %org($0E, $CB24)
 		bvs &
