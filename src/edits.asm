@@ -6,7 +6,7 @@
 		
 ; infinite lives
 %org($0E, $CB24)
-		beq &
+		bvs &
 		
 ; always enable level select and show the level number on screen
 %org($0E, $CA00)
@@ -78,3 +78,12 @@ dream_select_text:
 ; title screen tilemap
 %org($0D, $9CED)
 		db "PRACTICE", $00, "!VERSION"
+
+; skip level end cutscenes
+%org($0E, $CBFE)
+		bcc $CC0D
+
+; skip level intro cutscenes
+%org($0E, $CD87)
+		jmp $CD90
+

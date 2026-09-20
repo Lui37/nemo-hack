@@ -175,23 +175,42 @@ handle_boss_hp_drawing:
 		beq .draw_hp
 		
 		
-		
 item_interaction:
 		inc draw_timer
 		lda object_id,x
 		rts
 		
+		
+locked_door:
+		beq .start_opening
+		pla
+		pla
+		rts
+		
+	.start_opening
+		txa
+		pha
+		jsr update_timer
+		jsr handle_timer_drawing
+		pla
+		tax
+		rts
+		
+		
 transformation:
 		inc draw_timer
 		jmp $FF71
+		
 		
 increment_level:
 		inc reset_timer
 		jmp $CD87
 
+
 pause_init:
 		jsr $FD52
 		jmp handle_timer_drawing
+
 
 pause_tick:
 		jsr $FC81

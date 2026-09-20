@@ -43,6 +43,9 @@
 %org($0F, $E16D)
 		jsr item_interaction
 		
+%org($0F, $E1D8)
+		jsr locked_door
+		
 %org($0E, $D85A)
 		jsr transformation
 		
