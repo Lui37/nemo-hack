@@ -9,6 +9,8 @@ incsrc "every_frame.asm"
 incsrc "level.asm"
 
 print site
-
 warnsite $E516
 
+; title screen digits
+org $020310
+incbin "chr/numbers.bin"

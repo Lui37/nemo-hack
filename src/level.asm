@@ -67,7 +67,7 @@ update_timer:
 	
 handle_timer_drawing:
 		ldx vram_buffer_index
-		lda #5
+		lda #7
 		sta vram_buffer,x
 		inx
 		lda #>TIMER_LOCATION
@@ -82,9 +82,9 @@ handle_timer_drawing:
 		sta vram_buffer,x
 		inx
 		lda level_timer_seconds
-		jsr draw_dec_value
+		jsr draw_dec_value_with_separator
 		lda level_timer_frames
-		jsr draw_dec_value
+		jsr draw_dec_value_with_separator
 		
 		stx vram_buffer_index
 		
@@ -93,6 +93,12 @@ handle_timer_drawing:
 		rts
 
 
+draw_dec_value_with_separator:
+		tay
+		lda #$3A
+		sta vram_buffer,x
+		inx
+		tya
 draw_dec_value:
 	; inline hex to dec
 		ldy #0
