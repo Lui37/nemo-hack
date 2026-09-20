@@ -22,7 +22,7 @@ level_tick:
 		jsr handle_timer_drawing
 	+
 	
-		lda $96
+		lda current_level
 		cmp #7
 		bcc +
 		jsr handle_boss_hp_drawing
@@ -127,20 +127,20 @@ draw_dec_value:
 
 handle_boss_hp_drawing:
 		ldy #2
-		lda $0490,y
-		cmp #$3F		; penguin
+		lda object_id,y
+		cmp #$3F				; penguin
 		beq .boss
-		cmp #$42		; stingray
+		cmp #$42				; stingray
 		beq .boss
-		cmp #$53		; boss defeated
+		cmp #$53				; boss defeated
 		beq .win
-		iny				; use Y=3 for final boss
-		cmp #$54		; nightmare king defeated
+		iny						; use Y=3 for final boss
+		cmp #$54				; nightmare king defeated
 		beq .win
-		cmp #$44		; nightmare king (0493 = 45)
+		cmp #$44				; nightmare king (0493 = 45)
 		bne .done
 	.boss
-		lda $05D0,y		; hp
+		lda object_hp,y
 		tay
 	.draw_hp
 		ldx vram_buffer_index
@@ -166,19 +166,19 @@ handle_boss_hp_drawing:
 		rts
 		
 	.win
-		lda $0620,y		; only draw the timer once
+		lda object_timer,y		; only draw the level timer once
 		cmp #$3C
 		bne +
 		inc draw_timer
 	+
-		ldy #0			; force HP to 0
+		ldy #0					; force HP to 0
 		beq .draw_hp
 		
 		
 		
 item_interaction:
 		inc draw_timer
-		lda $0490,x
+		lda object_id,x
 		rts
 		
 transformation:

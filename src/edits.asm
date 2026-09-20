@@ -14,15 +14,15 @@ title_screen:
 		lda #$BF		; enable and print "dream select"
 		sta $02F8
 		sta $02FC
-		ldx $77
+		ldx vram_buffer_index
 		ldy #$00
 	-	lda dream_select_text,y
-		sta $0300,x
+		sta vram_buffer,x
 		inx
 		iny
 		cpy #$0F
 		bne -
-		stx $77
+		stx vram_buffer_index
 
 	.loop
 		lda #$01		; level select handler
@@ -38,28 +38,28 @@ title_screen:
 		cmp #$01
 		bne .loop
 		
-		ldy $96
+		ldy current_level
 		cpy #$09		; allow selecting 8-2 and 8-3
 		beq .loop
 		iny
-		sty $96
+		sty current_level
 		
-		ldx $77
+		ldx vram_buffer_index
 		lda #1
-		sta $0300,x
+		sta vram_buffer,x
 		inx
 		lda #$23
-		sta $0300,x
+		sta vram_buffer,x
 		inx
 		lda #$12
-		sta $0300,x
+		sta vram_buffer,x
 		inx
 		iny				; print level number +1
 		tya
 		ora #$30
-		sta $0300,x
+		sta vram_buffer,x
 		inx
-		stx $77
+		stx vram_buffer_index
 		
 		lda #$21
 		jsr $FD52
