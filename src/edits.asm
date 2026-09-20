@@ -11,7 +11,7 @@
 ; always enable level select and show the level number on screen
 %org($0E, $CA00)
 title_screen:
-		lda #$BF		; enable and print "dream select"
+		lda #$BF				; enable and print "dream select"
 		sta $02F8
 		sta $02FC
 		ldx vram_buffer_index
@@ -24,8 +24,10 @@ title_screen:
 		bne -
 		stx vram_buffer_index
 
+	; title screen with level select handler
 	.loop
-		lda #$01		; level select handler
+		lda #$01				
+		sta reset_timer			; fix the demo messing up the timer
 		jsr $FC81
 		
 		lda $23
@@ -39,7 +41,7 @@ title_screen:
 		bne .loop
 		
 		ldy current_level
-		cpy #$09		; allow selecting 8-2 and 8-3
+		cpy #$09				; allow selecting 8-2 and 8-3
 		beq .loop
 		iny
 		sty current_level
@@ -54,9 +56,8 @@ title_screen:
 		lda #$12
 		sta vram_buffer,x
 		inx
-		iny				; print level number +1
 		tya
-		ora #$30
+		adc #$31
 		sta vram_buffer,x
 		inx
 		stx vram_buffer_index
