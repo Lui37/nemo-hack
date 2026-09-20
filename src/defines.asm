@@ -25,7 +25,7 @@ allocate $F0
 	
 endallocate
 
-allocate $06B0
+allocate $06E0
 	level_timer_frames :: 1
 	level_timer_seconds :: 1
 	level_timer_minutes :: 1
