@@ -1,6 +1,7 @@
 incsrc "defines.asm"
 
 incsrc "edits.asm"
+incsrc "title.asm"
 incsrc "hijacks.asm"
 
 %org($0F, $E34C)
