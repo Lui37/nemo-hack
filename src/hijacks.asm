@@ -58,3 +58,8 @@
 %org($0E, $D335)
 		jsr pause_tick
 		
+%org($0E, $CCAD)
+		jsr fade_out_start
+		
+%org($0E, $CD1D)
+		jsr fade_out_start

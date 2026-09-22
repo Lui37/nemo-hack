@@ -217,3 +217,8 @@ pause_tick:
 		jsr $FC81
 		jmp update_timer
 		
+
+fade_out_start:
+		jsr handle_timer_drawing
+		jmp $FCE8
+		
