@@ -78,5 +78,5 @@ dream_select_text:
 		db $FE, $52, $45, $41, $4D, $00, $31, $00, $00, $00, $00, $00
 
 ; title screen tilemap
-%org($0D, $9CED)
+%org($0D, $9CEC)
 		db "PRACTICE", $00, "!VERSION"
