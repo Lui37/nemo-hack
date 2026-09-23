@@ -210,6 +210,7 @@ increment_level:
 
 pause_init:
 		jsr $FD52
+		jsr update_timer
 		jmp handle_timer_drawing
 
 

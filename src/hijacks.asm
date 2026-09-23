@@ -58,8 +58,19 @@
 %org($0E, $D335)
 		jsr pause_tick
 		
+; top exit
+%org($0E, $CC86)
+		jsr fade_out_start
+		
+; bottom exit
 %org($0E, $CCAD)
 		jsr fade_out_start
 		
+; mid screen exit
+%org($0E, $CCDE)
+		jsr fade_out_start
+		
+; side exit
 %org($0E, $CD1D)
 		jsr fade_out_start
+
