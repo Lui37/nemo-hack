@@ -1,4 +1,4 @@
-!VERSION = "V0.2.0"
+!VERSION = "V0.2.0P"
 
 macro org(bank, offset)
     org $10 + ({offset}&$1FFF) + ($2000*{bank})
