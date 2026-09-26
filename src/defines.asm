@@ -1,4 +1,4 @@
-!VERSION = "V0/1/1"
+!VERSION = "V0.2.0"
 
 macro org(bank, offset)
     org $10 + ({offset}&$1FFF) + ($2000*{bank})
@@ -22,23 +22,30 @@ allocate $F0
 	previous_60hz :: 1
 	real_frames_elapsed :: 1
 	dropped_frames :: 1
-	
 endallocate
 
 allocate $06E0
 	level_timer_frames :: 1
 	level_timer_seconds :: 1
 	level_timer_minutes :: 1
-	draw_timer :: 1
-	reset_timer :: 1
+	draw_timers :: 1
+	reset_timers :: 1
+	room_timer_frames :: 1
+	room_timer_seconds :: 1
+	room_timer_minutes :: 1
+	draw_room_timer :: 1
+	reset_room_timer :: 1
 endallocate
 
 ; constants
-TIMER_LOCATION			= $2B23
+LEVEL_TIMER_LOCATION	= $2B2C
+ROOM_TIMER_LOCATION		= $2B23
 BOSS_HP_LOCATION		= $2B35
+ROOM_TIMER_OFFSET		= room_timer_frames-level_timer_frames
 
 ; ram
 nmi_flag				= $13
+scratch					= $30 ; presumably
 vram_buffer_index		= $77
 current_keys			= $8B
 current_lives			= $8D

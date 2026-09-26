@@ -30,4 +30,11 @@ subroutine_E4B6:
 ; skip level intro cutscenes
 %org($0E, $CD87)
 		jmp $CD90
+		
+; move the title screen cursor down
+%org($0E, $C9AF)
+		lda #$BF
+%org($0E, $C9C3)
+		lda #$BF
+	
 

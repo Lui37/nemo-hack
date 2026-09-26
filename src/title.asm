@@ -9,7 +9,7 @@
 title_screen:
 		lda #0
 		sta current_level
-		inc reset_timer
+		inc reset_timers
 
 	; draw "dream" text
 		ldx vram_buffer_index
@@ -66,10 +66,9 @@ title_screen:
 		lda #$21
 		jsr $FD52
 		jmp .loop
-		
-print site
-warnsite $CA87
 
+bank0E_to_CA87:
+warnsite $CA87
 
 %org($0E, $CAE6)
 dream_select_text:

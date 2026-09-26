@@ -1,104 +1,157 @@
 
 level_init:
-		lda reset_timer
+		lda #0
+		ldy reset_timers
 		beq +
 		ldy counter_60hz
 		sty previous_60hz
-		lda #0
+		sta real_frames_elapsed
 		sta level_timer_frames
 		sta level_timer_seconds
 		sta level_timer_minutes
-		sta real_frames_elapsed
-		sta dropped_frames
-		sta reset_timer
-	+	inc draw_timer
-		rts 
+		sta reset_timers
+	+	inc reset_room_timer
+		inc draw_room_timer
+		rts
 
 
 level_tick:
-		jsr update_timer
+		jsr update_timers
 		
-		lda draw_timer
-		beq +
-		jsr handle_timer_drawing
-	+
-	
 		lda current_level
 		cmp #7
 		bcc +
 		jsr handle_boss_hp_drawing
 	+
-	
+
+		lda draw_timers
+		beq +
+		jsr handle_all_timer_drawing
 		jmp $D0AE
 		
+	+
+		lda draw_room_timer
+		beq +
+		jsr handle_room_timer_drawing
+	+
+		jmp $D0AE
+		
+		
+update_timers:
+		lda reset_room_timer
+		beq .both
+		ldx #0
+		stx dropped_frames
+		stx room_timer_frames
+		stx room_timer_seconds
+		stx room_timer_minutes	
+		stx reset_room_timer
+		beq .level
+
+	.both
+		ldx #ROOM_TIMER_OFFSET
+		jsr update_timer
+		
+		ldx #0
+	.level
+		jsr update_timer
+		stx real_frames_elapsed
+		rts
+		
+; X: timer offset
 update_timer:
 	.tick_level_timer
-		lda level_timer_frames
+		lda level_timer_frames,x
 		clc
 		adc real_frames_elapsed
-		sta level_timer_frames
+		sta level_timer_frames,x
 		cmp #60
 		bcc ..done
 	..tick_seconds
 		sbc #60
-		sta level_timer_frames
-		lda level_timer_seconds
+		sta level_timer_frames,x
+		lda level_timer_seconds,x
 		adc #0
-		sta level_timer_seconds
+		sta level_timer_seconds,x
 		cmp #60
 		bcc ..check_if_done
 		
 		sbc #60
-		sta level_timer_seconds
-		lda level_timer_minutes
+		sta level_timer_seconds,x
+		lda level_timer_minutes,x
 		adc #0
 		cmp #10
 		bcc ..no_cap
 		lda #59
-		sta level_timer_frames
-		sta level_timer_seconds
+		sta level_timer_frames,x
+		sta level_timer_seconds,x
 		lda #9
 	..no_cap
-		sta level_timer_minutes
+		sta level_timer_minutes,x
 		
 	..check_if_done
-		lda level_timer_frames
+		lda level_timer_frames,x
 		cmp #60
 		bcs ..tick_seconds
 	
 	..done
-		lda #0
-		sta real_frames_elapsed
 		rts
 
 
+handle_all_timer_drawing:
+		lda #0
+		sta draw_timers
+		lda #>LEVEL_TIMER_LOCATION
+		sta scratch
+		lda #<LEVEL_TIMER_LOCATION
+		sta scratch+1
+		lda level_timer_frames
+		sta scratch+2
+		lda level_timer_seconds
+		sta scratch+3
+		lda level_timer_minutes
+		sta scratch+4
+		jsr handle_timer_drawing
+
+handle_room_timer_drawing:
+		lda #0
+		sta draw_room_timer
+		lda #>ROOM_TIMER_LOCATION
+		sta scratch
+		lda #<ROOM_TIMER_LOCATION
+		sta scratch+1
+		lda room_timer_frames
+		sta scratch+2
+		lda room_timer_seconds
+		sta scratch+3
+		lda room_timer_minutes
+		sta scratch+4
+
+; scratch+0(2): timer location
+; scratch+2(3): timer values
 handle_timer_drawing:
 		ldx vram_buffer_index
 		lda #7
 		sta vram_buffer,x
 		inx
-		lda #>TIMER_LOCATION
+		lda scratch
 		sta vram_buffer,x
 		inx
-		lda #<TIMER_LOCATION
+		lda scratch+1
 		sta vram_buffer,x
 		inx
 		
-		lda level_timer_minutes
+		lda scratch+4
 		ora #$30
 		sta vram_buffer,x
 		inx
-		lda level_timer_seconds
+		lda scratch+3
 		jsr draw_dec_value_with_separator
-		lda level_timer_frames
+		lda scratch+2
 		jsr draw_dec_value_with_separator
 		
 		stx vram_buffer_index
-		
-		lda #0
-		sta draw_timer
 		rts
-
 
 draw_dec_value_with_separator:
 		tay
@@ -170,14 +223,17 @@ handle_boss_hp_drawing:
 		lda object_timer,y		; only draw the level timer once
 		cmp #$3C
 		bne +
-		inc draw_timer
+		inc draw_timers
 	+
 		ldy #0					; force HP to 0
 		beq .draw_hp
 		
-		
+pushpc
+pushsite
+%org($0E, bank0E_to_CA87:site)
+
 item_interaction:
-		inc draw_timer
+		inc draw_room_timer
 		lda object_id,x
 		rts
 		
@@ -191,35 +247,40 @@ locked_door:
 	.start_opening
 		txa
 		pha
-		jsr update_timer
-		jsr handle_timer_drawing
+		jsr update_timers
+		jsr handle_all_timer_drawing
 		pla
 		tax
 		rts
 		
 		
 transformation:
-		inc draw_timer
+		inc draw_room_timer
 		jmp $FF71
 		
 		
 increment_level:
-		inc reset_timer
+		inc reset_timers
 		jmp $CD87
 
 
 pause_init:
 		jsr $FD52
-		jsr update_timer
-		jmp handle_timer_drawing
+		jsr update_timers
+		jmp handle_room_timer_drawing
 
 
 pause_tick:
 		jsr $FC81
-		jmp update_timer
+		jmp update_timers
 		
 
 fade_out_start:
-		jsr handle_timer_drawing
+		jsr handle_room_timer_drawing
 		jmp $FCE8
 		
+printf "bank 0E space: {0}/00CA87", site
+warnsite $CA87
+		
+pullsite
+pullpc
