@@ -220,13 +220,13 @@ handle_boss_hp_drawing:
 		rts
 		
 	.win
-		lda object_timer,y		; only draw the level timer once
+		lda object_timer,y		; only draw stuff once
 		cmp #$3C
-		bne +
+		bne .done
 		inc draw_timers
-	+
 		ldy #0					; force HP to 0
 		beq .draw_hp
+
 		
 pushpc
 pushsite
